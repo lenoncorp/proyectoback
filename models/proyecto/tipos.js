@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 const tiposProyecto = gql`
+
     type Objetivo {
         _id: ID!
         descripcion: String!
@@ -42,6 +43,7 @@ const tiposProyecto = gql`
             objetivos: [crearObjetivo]
         ): Proyecto
     }
+
 `;
 
 export { tiposProyecto };

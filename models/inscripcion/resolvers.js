@@ -1,6 +1,7 @@
 import { InscriptionModel } from './inscripcion.js';
 
 const resolverInscripciones = {
+
     Query: {
         Inscripciones: async (parent, args) => {
             const inscripciones = await InscriptionModel.find();
@@ -26,6 +27,7 @@ const resolverInscripciones = {
             return inscripcionAprobada;
         },
     },
+
 };
 
 export { resolverInscripciones };

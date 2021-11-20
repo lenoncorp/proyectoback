@@ -1,3 +1,4 @@
+
 //import { Enum_EstadoInscripcion } from '../enums/enums.js';
 import mongoose from 'mongoose';
 import { UserModel } from '../usuario/usuario.js';
@@ -13,11 +14,14 @@ const {Schema, model} = mongoose;
   //estudiante: Schema.Types.ObjectId;
 //}
 
+
 const inscriptionSchema = new Schema({
   estado: {
     type: String,
     enum: ['ACEPTADO', 'RECHAZADO', 'PENDIENTE'],
+
     default: 'PENDIENTE', 
+
     required: true,
   },
   fechaIngreso: {
@@ -42,4 +46,6 @@ const inscriptionSchema = new Schema({
 
 const InscriptionModel = model('Inscripcion', inscriptionSchema);
 
+
 export { InscriptionModel };
+

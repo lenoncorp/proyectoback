@@ -1,3 +1,4 @@
+
 import { ModeloAvance } from "./avance.js";
 
 const resolversAvance = {
@@ -28,6 +29,7 @@ const resolversAvance = {
             return avanceCreado;
         },
     },
+
 };
 
 export { resolversAvance };

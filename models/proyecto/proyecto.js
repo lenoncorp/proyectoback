@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 //import { Enum_EstadoProyecto, Enum_FaseProyecto, Enum_TipoObjetivo } from '../enums/enums';
 import { ObjectiveModel } from '../objective.js';
 import { UserModel } from '../usuario/usuario.js';
@@ -66,6 +67,7 @@ const projectSchema = new Schema({
     toJSON: { virtuals: true }, 
     toObject: { virtuals: true },  
 }
+
 );
 
 projectSchema.virtual('avances', {
@@ -81,5 +83,6 @@ projectSchema.virtual('inscripciones', {
 });
 
 const ProjectModel = model('Proyecto', projectSchema);
+
 
 export { ProjectModel };

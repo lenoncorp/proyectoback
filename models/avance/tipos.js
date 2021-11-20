@@ -1,3 +1,4 @@
+
 import { gql } from "apollo-server-express";
 
 const tiposAvance = gql`
@@ -21,6 +22,7 @@ const tiposAvance = gql`
         creadoPor: String!
         ): Avance
     }
+
 `;
 
 export { tiposAvance };

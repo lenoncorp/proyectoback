@@ -1,3 +1,4 @@
+
 //import { Enum_Rol, Enum_EstadoUsuario } from '../enums/enums.js';
 import mongoose from 'mongoose';
 
@@ -11,6 +12,7 @@ const {Schema, model} = mongoose;
   //rol: Enum_Rol;
  // estado: Enum_EstadoUsuario;
 //}
+
 
 const userSchema = new Schema({
   correo: {
@@ -57,5 +59,6 @@ const userSchema = new Schema({
 });
 
 const UserModel = model('User', userSchema);
+
 
 export { UserModel };
