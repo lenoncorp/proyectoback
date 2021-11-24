@@ -10,7 +10,7 @@ const resolversAvance = {
         },
         filtrarAvance: async (parents, args) => {
             const avanceFiltrado = await ModeloAvance.find({
-                proyecto: args.idProyecto,
+                proyecto: args._id,
             })
                 .populate("proyecto")
                 .populate("creadoPor");
