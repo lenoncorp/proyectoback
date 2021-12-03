@@ -4,7 +4,7 @@ const resolversProyecto = {
 
     Query: {
         Proyectos: async (parent, args, context) => {
-            const proyectos = await ProjectModel.find();
+            const proyectos = await ProjectModel.find().populate('lider');
             return proyectos;
         },
     },
