@@ -1,10 +1,19 @@
+import { InscriptionModel } from '../inscripcion/inscripcion.js';
+import { UserModel } from '../usuario/usuario.js';
 import { ProjectModel } from './proyecto.js';
 
 const resolversProyecto = {
-
+    Proyecto: {
+        lider: async (parent, args, context) => {
+            const usr = await UserModel.findOne({
+                _id: parent.lider.toString(),
+            });
+            return usr;
+        },
+    },
     Query: {
         Proyectos: async (parent, args, context) => {
-            const proyectos = await ProjectModel.find().populate('lider');
+            const proyectos = await ProjectModel.find();
             return proyectos;
         },
     },
@@ -23,7 +32,7 @@ const resolversProyecto = {
             return proyectoCreado;
         },
         editarProyecto: async (parent, args) => {
-            const proyectoEditado = await ProjectModel.findOneAndUpdate(
+            const proyectoEditado = await ProjectModel.findByIdAndUpdate(
                 args._id,
                 { ...args.campos },
                 { new: true }
@@ -35,9 +44,7 @@ const resolversProyecto = {
                 args.idProyecto,
                 {
                     $addToSet: {
-                        objetivos: {
-                            ...args.campos,
-                        },
+                        objetivos: { ...args.campos, },
                     },
                 },
                 { new: true }
