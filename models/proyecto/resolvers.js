@@ -11,12 +11,29 @@ const resolversProyecto = {
             return usr;
         },
     },
+    // Query: {
+    //     Proyectos: async (parent, args, context) => {
+    //         const proyectos = await ProjectModel.find();
+    //         return proyectos;
+    //     },
+    // },
+
+    //QUERY H013
     Query: {
         Proyectos: async (parent, args, context) => {
-            const proyectos = await ProjectModel.find();
+            console.log(args);
+            const proyectos = await ProjectModel.find({ ...args.filtroP });
             return proyectos;
         },
+        ProyectoLider: async (parent, args) => {
+            const proyectoLider = await ProjectModel.findOne({ _id: args._id });
+            return proyectoLider;
+        },
     },
+
+
+
+
     Mutation: {
         crearProyecto: async (parent, args, context) => {
             const proyectoCreado = await ProjectModel.create({

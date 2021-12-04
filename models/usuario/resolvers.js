@@ -39,26 +39,65 @@ const resolversUsuario = {
             return InscriptionModel.find({ estudiante: parent._id });
         },
     },
+
+    //query con filtro genérico
     Query: {
-
         Usuarios: async (parent, args, context) => {
-            if(context.userData.rol ==='LIDER'){
-                console.log(args);
-                const usuarios = await UserModel.find({rol: 'ESTUDIANTE' });
-                return usuarios;}
-            else{
-                const usuarios = await UserModel.find();
-                return usuarios;
-            }
+            console.log(args);
+            const usuarios = await UserModel.find({ ...args.filtro });
+            return usuarios;
         },
-
-
-        //
         Usuario: async (parent, args) => {
             const usuario = await UserModel.findOne({ _id: args._id });
             return usuario;
         },
     },
+
+    
+
+
+    //query con filtro génerico + if
+
+    // Query: {
+    //     Usuarios: async (parent, args, context) => {
+    //         if(context.userData.rol ==='LIDER'){
+    //             console.log(args);
+    //             const usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });
+    //             return usuarios;
+    //         }else{
+    //             const usuarios = await UserModel.find();
+    //             return usuarios;
+    //         }
+    //     },
+    //     Usuario: async (parent, args) => {
+    //         const usuario = await UserModel.findOne({ _id: args._id });
+    //         return usuario;
+    //     },
+    // },
+
+    //Query con if
+    // Query: {
+
+    //     Usuarios: async (parent, args, context) => {
+    //         if(context.userData.rol ==='LIDER'){
+    //             console.log(args);
+    //             const usuarios = await UserModel.find({rol: 'ESTUDIANTE' });
+    //             return usuarios;}
+    //         else{
+    //             const usuarios = await UserModel.find();
+    //             return usuarios;
+    //         }
+    //     },
+
+
+    //     //
+    //     Usuario: async (parent, args) => {
+    //         const usuario = await UserModel.findOne({ _id: args._id });
+    //         return usuario;
+    //     },
+    // },
+
+
     Mutation: {
         crearUsuario: async (parent, args) => {
             const salt = await bcrypt.genSalt(10);
