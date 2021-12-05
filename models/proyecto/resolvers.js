@@ -18,19 +18,46 @@ const resolversProyecto = {
     //     },
     // },
 
-    //QUERY H013
-    Query: {
+    //QUERY H013 sin restricciones
+    // Query: {
+    //     Proyectos: async (parent, args, context) => {
+    //         console.log(args);
+    //         const proyectos = await ProjectModel.find({ ...args.filtroP });
+    //         return proyectos;
+    //     },
+    //     ProyectoLider: async (parent, args) => {
+    //         const proyectoLider = await ProjectModel.findOne({ _id: args._id });
+    //         return proyectoLider;
+    //     },
+    // },
+    
+    //H013
+    Query:{
         Proyectos: async (parent, args, context) => {
-            console.log(args);
-            const proyectos = await ProjectModel.find({ ...args.filtroP });
-            return proyectos;
-        },
-        ProyectoLider: async (parent, args) => {
-            const proyectoLider = await ProjectModel.findOne({ _id: args._id });
-            return proyectoLider;
-        },
-    },
+            if (context.userData.rol === 'LIDER') {
+                console.log("mensaje de entrada");
+                console.log(context.userData);
+                
+                const proyectos = await ProjectModel.find({ lider: context.userData._id})
+                    .populate("inscripciones")
+                    // .populate("avances")
+                    
+                    // {
+                    //     path: 'inscripciones',
+                    //     populate: {
+                    //     path: 'avances',
+                    //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
+                    //     },
+                    // }
+                
+                return proyectos;
+            }
+            else{
+                return null;
+            }
 
+        } 
+    },
 
 
 

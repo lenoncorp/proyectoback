@@ -4,7 +4,35 @@ import { InscriptionModel } from '../inscripcion/inscripcion.js';
 
 
 const resolversUsuario = {
+    //H10
+    Query:{
+        Usuarios: async (parent, args, context) => {
+            if (context.userData.rol === 'LIDER') {
+                console.log("mensaje de entrada");
+                console.log(context.userData);
+                
+                const usuarios = await UserModel.find({ rol: 'ESTUDIANTE'})
+                    .populate([
+                    {
+                        path: 'inscripciones',
+                        populate: {
+                        path: 'proyectosLiderados',
+                        populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
+                        },
+                    }
+                ])
+                return usuarios;
+            }else if(context.userData.rol === 'ADMINISTRADOR'){
+                const usuarios = await UserModel.find();
+                return usuarios;
+            }
+            else{
+                return null;
+            }
 
+        } 
+    },
+            
     //Query: {
     //Usuarios: async (parent, args, context) => {
     //if (context.userData.rol === 'LIDER') {
@@ -34,24 +62,27 @@ const resolversUsuario = {
     //path: 'proyectosLiderados',
     // },
     // ]);
-    Usuario: {
-        inscripciones: async (parent, args, context) => {
-            return InscriptionModel.find({ estudiante: parent._id });
-        },
-    },
+   
 
     //query con filtro genérico
-    Query: {
-        Usuarios: async (parent, args, context) => {
-            console.log(args);
-            const usuarios = await UserModel.find({ ...args.filtro });
-            return usuarios;
-        },
-        Usuario: async (parent, args) => {
-            const usuario = await UserModel.findOne({ _id: args._id });
-            return usuario;
-        },
-    },
+
+    // Usuario: {
+    //     inscripciones: async (parent, args, context) => {
+    //         return InscriptionModel.find({ estudiante: parent._id });
+    //     },
+    // },
+
+    // Query: {
+    //     Usuarios: async (parent, args, context) => {
+    //         console.log(args);
+    //         const usuarios = await UserModel.find({ ...args.filtro });
+    //         return usuarios;
+    //     },
+    //     Usuario: async (parent, args) => {
+    //         const usuario = await UserModel.findOne({ _id: args._id });
+    //         return usuario;
+    //     },
+    // },
 
     
 
