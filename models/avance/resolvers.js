@@ -3,11 +3,15 @@ import { ModeloAvance } from "./avance.js";
 
 const resolversAvance = {
     Query: {
-        Avances: async (parent, args) => {
-            const avances = await ModeloAvance.find()
+        Avances: async (parent, args, context) => {
+            if (context.userData.rol === 'ESTUDIANTE') {
+                const avances = await ModeloAvance.find()
                 .populate('proyecto')
                 .populate('creadoPor');
-            return avances;
+                return avances;
+            }else{
+                return null;
+            }
         },
         filtrarAvance: async (parents, args) => {
             const avanceFiltrado = await ModeloAvance.find({
