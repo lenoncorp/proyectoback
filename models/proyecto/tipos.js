@@ -54,8 +54,7 @@ const tiposProyecto = gql`
     type Query {
         Proyectos(filtroP: FiltroProyectos): [Proyecto]
         ProyectoLider(_id: String!): Proyecto
-    }
-
+     }
 
     type Mutation {
         crearProyecto(
@@ -69,6 +68,10 @@ const tiposProyecto = gql`
 
         editarProyecto(_id: String!, campos: camposProyecto): Proyecto
         
+        editarProyectoAdmin(
+            _id: String!,
+            campos: camposProyecto
+        ): Proyecto
         
         crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
     

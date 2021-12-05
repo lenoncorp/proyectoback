@@ -31,8 +31,9 @@ const resolversProyecto = {
     //     },
     // },
     
-    //H013
+   
     Query:{
+        //H013
         Proyectos: async (parent, args, context) => {
             if (context.userData.rol === 'LIDER') {
                 console.log("mensaje de entrada");
@@ -49,13 +50,16 @@ const resolversProyecto = {
                     //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
                     //     },
                     // }
-                
                 return proyectos;
             }
+            //H006
+            else if(context.userData.rol === 'ADMINISTRADOR'){
+                const proyectos = await ProjectModel.find();
+                return proyectos;
+            }        
             else{
                 return null;
             }
-
         } 
     },
 
@@ -83,6 +87,20 @@ const resolversProyecto = {
             );
             return proyectoEditado;
         },
+
+        editarProyectoAdmin: async (parent, args, context) => {
+            if(context.userData.rol === 'ADMINISTRADOR'){
+                const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
+                args._id,
+                { ...args.campos },
+                { new: true }
+                )
+                return proyectoEditadoAdmin;
+            }else{
+                return null;
+            }
+        },
+
         crearObjetivo: async (parent, args) => {
             const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
                 args.idProyecto,

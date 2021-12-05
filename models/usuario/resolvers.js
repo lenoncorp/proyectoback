@@ -128,6 +128,7 @@ const resolversUsuario = {
     //     },
     // },
 
+    
 
     Mutation: {
         crearUsuario: async (parent, args) => {
@@ -161,6 +162,24 @@ const resolversUsuario = {
 
             return usuarioEditado;
         },
+
+        //H05
+        editarUsuarioAdmin: async (parent, args, context) => {
+            if(context.userData.rol === 'ADMINISTRADOR'){
+                const usuarioEditadoAdmin = await UserModel.findByIdAndUpdate(args._id, {
+                    estado: args.estado,
+                },
+                //para mostrar el usuario ya editado
+                    { new: true }
+                );
+                return usuarioEditadoAdmin;
+            }else{
+                return null;
+            }
+        },
+
+
+        
         eliminarUsuario: async (parent, args) => {
             if (Object.keys(args).includes('_id')) {
                 const usuarioEliminado = await UserModel.findOneAndDelete({ _id: args._id });
