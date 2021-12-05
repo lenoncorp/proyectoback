@@ -68,7 +68,7 @@ const tiposProyecto = gql`
 
         editarProyecto(_id: String!, campos: camposProyecto): Proyecto
         
-        editarProyectoAdmin(
+        editarProyectoAdmin(   
             _id: String!,
             campos: camposProyecto
         ): Proyecto

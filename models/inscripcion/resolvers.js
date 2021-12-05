@@ -7,7 +7,17 @@ const resolverInscripciones = {
             const inscripciones = await InscriptionModel.find();
             return inscripciones;
         },
+
+        InscripcionesLider: async (parent,args,context) => {
+            if (context.userData.rol === 'LIDER') {
+                    const inscripcionesLider = await InscriptionModel.find({ lider: context.userData._id})
+                return inscripcionesLider;
+            }else{
+                return null;
+            }
+        }
     },
+
     Mutation: {
         crearInscripcion: async (parent, args) => {
             const inscripcionCreada = await InscriptionModel.create({
@@ -26,8 +36,22 @@ const resolverInscripciones = {
             );
             return inscripcionAprobada;
         },
-    },
 
+        //H016
+        aprobarInscripcionLider: async (parent, args, context) => {
+            if (context.userData.rol === 'LIDER') {
+                const inscripcionAprobadaLider = await InscriptionModel.findByIdAndUpdate(args.id, {
+                    estado: args.estado,
+                    fechaIngreso: Date.now(),
+                },
+                    {new:true}
+                );
+                return inscripcionAprobadaLider;
+            }else{
+                return null;
+            }
+        },
+    },
 };
 
 export { resolverInscripciones };

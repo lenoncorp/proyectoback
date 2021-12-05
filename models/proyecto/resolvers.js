@@ -67,18 +67,23 @@ const resolversProyecto = {
 
     Mutation: {
         crearProyecto: async (parent, args, context) => {
-            const proyectoCreado = await ProjectModel.create({
-                nombre: args.nombre,
-                estado: args.estado,
-                fase: args.fase,
-                fechaInicio: args.fechaInicio,
-                fechaFin: args.fechaFin,
-                presupuesto: args.presupuesto,
-                lider: args.lider,
-                objetivos: args.objetivos,
-            });
-            return proyectoCreado;
+            if(context.userData.rol === 'LIDER'){
+                const proyectoCreado = await ProjectModel.create({
+                    nombre: args.nombre,
+                    estado: args.estado,
+                    fase: args.fase,
+                    fechaInicio: args.fechaInicio,
+                    fechaFin: args.fechaFin,
+                    presupuesto: args.presupuesto,
+                    lider: args.lider,
+                    objetivos: args.objetivos,
+                })
+                return proyectoCreado;
+            }else{
+                return null;
+            }
         },
+
         editarProyecto: async (parent, args) => {
             const proyectoEditado = await ProjectModel.findByIdAndUpdate(
                 args._id,
@@ -96,6 +101,14 @@ const resolversProyecto = {
                 { new: true }
                 )
                 return proyectoEditadoAdmin;
+            // }else if(context.userData.rol === 'LIDER'){
+            //     const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
+            //         args._id, {
+            //             nombre: args.nombre,
+            //             objetivos: args.objetivos,
+            //             presupuesto: args.presupuesto,
+            //         })
+            //     return proyectoEditadoAdmin;
             }else{
                 return null;
             }
