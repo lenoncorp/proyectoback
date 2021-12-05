@@ -28,6 +28,20 @@ const resolversAvance = {
             });
             return avanceCreado;
         },
+
+        editarAvance: async (parents, args, context) => {
+            if (context.userData.rol === 'LIDER') {
+                const avanceEditado = ModeloAvance.findByIdAndUpdate(
+                    args._id, {
+                        observaciones: args.observaciones, 
+            },
+                { new: true }
+            );
+                return avanceEditado;
+            }else{
+                return null;
+            }
+        },
     },
 
 };

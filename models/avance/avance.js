@@ -13,9 +13,6 @@ const {Schema, model} = mongoose;
   //creadoPor: Schema.Types.ObjectId;
 //}
 
-
-
-
 const avanceSchema = new Schema({
   fecha: {
     type: Date,

@@ -12,15 +12,15 @@ const resolversUsuario = {
                 console.log(context.userData);
                 
                 const usuarios = await UserModel.find({ rol: 'ESTUDIANTE'})
-                    .populate([
-                    {
-                        path: 'inscripciones',
-                        populate: {
-                        path: 'proyectosLiderados',
-                        populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
-                        },
-                    }
-                ])
+                    // .populate([
+                    // {
+                    //     path: 'inscripciones',
+                    //     populate: {
+                    //     path: 'proyectosLiderados',
+                    //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
+                    //     },
+                    //}
+                //])
                 return usuarios;
             }else if(context.userData.rol === 'ADMINISTRADOR'){
                 const usuarios = await UserModel.find();
@@ -173,7 +173,17 @@ const resolversUsuario = {
                     { new: true }
                 );
                 return usuarioEditadoAdmin;
-            }else{
+                //H011
+            }else if(context.userData.rol === 'LIDER'){
+                const usuarioEditadoAdmin = await UserModel.findByIdAndUpdate(args._id, {
+                    estado: args.estado,
+                },
+                //para mostrar el usuario ya editado
+                    { new: true }
+                );
+                return usuarioEditadoAdmin;
+            }
+            else{
                 return null;
             }
         },

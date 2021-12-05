@@ -41,7 +41,8 @@ const resolversProyecto = {
                 
                 const proyectos = await ProjectModel.find({ lider: context.userData._id})
                     .populate("inscripciones")
-                    // .populate("avances")
+                    //H017
+                    .populate("avances")
                     
                     // {
                     //     path: 'inscripciones',
@@ -56,9 +57,11 @@ const resolversProyecto = {
             else if(context.userData.rol === 'ADMINISTRADOR'){
                 const proyectos = await ProjectModel.find();
                 return proyectos;
-            }        
+            }
+            //H019       
             else{
-                return null;
+                const proyectos = await ProjectModel.find();
+                return proyectos;
             }
         } 
     },
