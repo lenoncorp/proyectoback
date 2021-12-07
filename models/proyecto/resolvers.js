@@ -104,19 +104,27 @@ const resolversProyecto = {
                 { new: true }
                 )
                 return proyectoEditadoAdmin;
-            // }else if(context.userData.rol === 'LIDER'){
-            //     const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
-            //         args._id, {
-            //             nombre: args.nombre,
-            //             objetivos: args.objetivos,
-            //             presupuesto: args.presupuesto,
-            //         })
-            //     return proyectoEditadoAdmin;
             }else{
                 return null;
             }
         },
 
+        editarProyectoLider: async (parent, args, context) => {
+            if(context.userData.rol === 'LIDER'){
+                const proyectoEditadoLider = await ProjectModel.findByIdAndUpdate( 
+                args._id,
+                { 
+                    nombre: args.nombre,
+                    objetivos: args.objetivos,
+                    presupuesto: args.presupuesto,
+                },
+                { new: true }
+                )
+                return proyectoEditadoLider;
+            }else{
+                return null;
+            }
+        },
         crearObjetivo: async (parent, args) => {
             const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
                 args.idProyecto,

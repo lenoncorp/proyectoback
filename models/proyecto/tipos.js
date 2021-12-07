@@ -72,6 +72,13 @@ const tiposProyecto = gql`
             _id: String!,
             campos: camposProyecto
         ): Proyecto
+
+        editarProyectoLider(
+            _id: String!,
+            nombre: String
+            objetivos: [String]
+            presupuesto: Float
+        ): Proyecto
         
         crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
     
