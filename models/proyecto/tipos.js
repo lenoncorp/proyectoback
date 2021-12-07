@@ -53,7 +53,7 @@ const tiposProyecto = gql`
 
     type Query {
         Proyectos(filtroP: FiltroProyectos): [Proyecto]
-        ProyectoLider(_id: String!): Proyecto
+        
      }
 
     type Mutation {

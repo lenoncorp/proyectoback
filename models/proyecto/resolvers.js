@@ -35,33 +35,37 @@ const resolversProyecto = {
     Query:{
         //H013
         Proyectos: async (parent, args, context) => {
-            if (context.userData.rol === 'LIDER') {
-                console.log("mensaje de entrada");
-                console.log(context.userData);
-                
-                const proyectos = await ProjectModel.find({ lider: context.userData._id})
-                    .populate("inscripciones")
-                    //H017
-                    .populate("avances")
+            if(context.userData){
+                if (context.userData.rol === 'LIDER') {
+                    console.log("mensaje de entrada");
+                    console.log(context.userData);
                     
-                    // {
-                    //     path: 'inscripciones',
-                    //     populate: {
-                    //     path: 'avances',
-                    //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
-                    //     },
-                    // }
-                return proyectos;
-            }
-            //H006
-            else if(context.userData.rol === 'ADMINISTRADOR'){
-                const proyectos = await ProjectModel.find();
-                return proyectos;
-            }
-            //H019       
-            else{
-                const proyectos = await ProjectModel.find();
-                return proyectos;
+                    const proyectos = await ProjectModel.find({ lider: context.userData._id})
+                        .populate("inscripciones")
+                        //H017
+                        .populate("avances")
+                        
+                        // {
+                        //     path: 'inscripciones',
+                        //     populate: {
+                        //     path: 'avances',
+                        //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
+                        //     },
+                        // }
+                    return proyectos;
+                }
+                //H006
+                else if(context.userData.rol === 'ADMINISTRADOR'){
+                    const proyectos = await ProjectModel.find();
+                    return proyectos;
+                }
+                //H019       
+                else if (context.userData.rol === 'ESTUDIANTE'){
+                    const proyectos = await ProjectModel.find();
+                    return proyectos;
+                }else{
+                    return null;
+                }
             }
         } 
     },
@@ -69,19 +73,22 @@ const resolversProyecto = {
 
 
     Mutation: {
+        //H012
         crearProyecto: async (parent, args, context) => {
-            if(context.userData.rol === 'LIDER'){
-                const proyectoCreado = await ProjectModel.create({
-                    nombre: args.nombre,
-                    estado: args.estado,
-                    fase: args.fase,
-                    fechaInicio: args.fechaInicio,
-                    fechaFin: args.fechaFin,
-                    presupuesto: args.presupuesto,
-                    lider: args.lider,
-                    objetivos: args.objetivos,
-                })
-                return proyectoCreado;
+            if(context.userData){
+                if(context.userData.rol === 'LIDER'){
+                    const proyectoCreado = await ProjectModel.create({
+                        nombre: args.nombre,
+                        estado: args.estado,
+                        fase: args.fase,
+                        fechaInicio: args.fechaInicio,
+                        fechaFin: args.fechaFin,
+                        presupuesto: args.presupuesto,
+                        lider: args.lider,
+                        objetivos: args.objetivos,
+                    })
+                    return proyectoCreado;
+                }
             }else{
                 return null;
             }
@@ -95,34 +102,38 @@ const resolversProyecto = {
             );
             return proyectoEditado;
         },
-
+        //H07 Y H08 y H09
         editarProyectoAdmin: async (parent, args, context) => {
-            if(context.userData.rol === 'ADMINISTRADOR'){
-                const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
-                args._id,
-                { ...args.campos },
-                { new: true }
-                )
-                return proyectoEditadoAdmin;
+            if(context.userData){
+                if(context.userData.rol === 'ADMINISTRADOR'){
+                    const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
+                    args._id,
+                    { ...args.campos },
+                    { new: true }
+                    )
+                    return proyectoEditadoAdmin;
+                }
             }else{
                 return null;
             }
         },
 
         editarProyectoLider: async (parent, args, context) => {
-            if(context.userData.rol === 'LIDER'){
-                const proyectoEditadoLider = await ProjectModel.findByIdAndUpdate( 
-                args._id,
-                { 
-                    nombre: args.nombre,
-                    objetivos: args.objetivos,
-                    presupuesto: args.presupuesto,
-                },
-                { new: true }
-                )
-                return proyectoEditadoLider;
-            }else{
-                return null;
+            if(context.userData){
+                if(context.userData.rol === 'LIDER'){
+                    const proyectoEditadoLider = await ProjectModel.findByIdAndUpdate( 
+                    args._id,
+                    { 
+                        nombre: args.nombre,
+                        objetivos: args.objetivos,
+                        presupuesto: args.presupuesto,
+                    },
+                    { new: true }
+                    )
+                    return proyectoEditadoLider;
+                }else{
+                    return null;
+                }
             }
         },
         crearObjetivo: async (parent, args) => {

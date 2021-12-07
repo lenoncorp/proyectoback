@@ -28,18 +28,22 @@ const resolversAutenticacion = {
             };
         },
         login: async (parent, args) => {
-            const usuarioEcontrado = await UserModel.findOne({ correo: args.correo });
-            if (await bcrypt.compare(args.password, usuarioEcontrado.password)) {
-                return {
-                    token: generateToken({
-                        _id: usuarioEcontrado._id,
-                        nombre: usuarioEcontrado.nombre,
-                        apellido: usuarioEcontrado.apellido,
-                        identificacion: usuarioEcontrado.identificacion,
-                        correo: usuarioEcontrado.correo,
-                        rol: usuarioEcontrado.rol,
-                    }),
-                };
+            const usuarioEncontrado = await UserModel.findOne({ correo: args.correo });
+            if(usuarioEncontrado){
+                if (await bcrypt.compare(args.password, usuarioEncontrado.password)) {
+                    return {
+                        token: generateToken({
+                            _id: usuarioEncontrado._id,
+                            nombre: usuarioEncontrado.nombre,
+                            apellido: usuarioEncontrado.apellido,
+                            identificacion: usuarioEncontrado.identificacion,
+                            correo: usuarioEncontrado.correo,
+                            rol: usuarioEncontrado.rol,
+                        }),
+                    };
+                }
+            }else{
+                return {error: "Error en la autenticación"}
             }
         },
 

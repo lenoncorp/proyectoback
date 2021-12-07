@@ -7,11 +7,13 @@ const resolverInscripciones = {
             const inscripciones = await InscriptionModel.find();
             return inscripciones;
         },
-
+        //H015
         InscripcionesLider: async (parent,args,context) => {
-            if (context.userData.rol === 'LIDER') {
-                    const inscripcionesLider = await InscriptionModel.find({ lider: context.userData._id})
-                return inscripcionesLider;
+            if(context.userData){
+                if (context.userData.rol === 'LIDER') {
+                        const inscripcionesLider = await InscriptionModel.find({ lider: context.userData._id})
+                    return inscripcionesLider;
+                }
             }else{
                 return null;
             }
@@ -19,14 +21,17 @@ const resolverInscripciones = {
     },
 
     Mutation: {
+        //H020
         crearInscripcion: async (parent, args, context) => {
-            if (context.userData.rol === 'ESTUDIANTE') {
-                const inscripcionCreada = await InscriptionModel.create({
-                    estado: args.estado,
-                    proyecto: args.proyecto,
-                    estudiante: context.userData._id,
-                })
-                return inscripcionCreada;
+            if(context.userData){
+                if (context.userData.rol === 'ESTUDIANTE') {
+                    const inscripcionCreada = await InscriptionModel.create({
+                        estado: args.estado,
+                        proyecto: args.proyecto,
+                        estudiante: context.userData._id,
+                    })
+                    return inscripcionCreada;
+                }
             }else{
                 return null;
             }
@@ -43,14 +48,16 @@ const resolverInscripciones = {
 
         //H016
         aprobarInscripcionLider: async (parent, args, context) => {
-            if (context.userData.rol === 'LIDER') {
-                const inscripcionAprobadaLider = await InscriptionModel.findByIdAndUpdate(args.id, {
-                    estado: args.estado,
-                    fechaIngreso: Date.now(),
-                },
-                    {new:true}
-                );
-                return inscripcionAprobadaLider;
+            if(context.userData){
+                if (context.userData.rol === 'LIDER') {
+                    const inscripcionAprobadaLider = await InscriptionModel.findByIdAndUpdate(args.id, {
+                        estado: args.estado,
+                        fechaIngreso: Date.now(),
+                    },
+                        {new:true}
+                    );
+                    return inscripcionAprobadaLider;
+                }
             }else{
                 return null;
             }
