@@ -41,9 +41,21 @@ const resolversUsuario = {
     },
     Query: {
         Usuarios: async (parent, args, context) => {
-            console.log(args);
-            const usuarios = await UserModel.find({ ...args.filtro });
-            return usuarios;
+            if(context.userData){
+                if(context.userData.rol === 'ESTUDIANTE'){
+                    console.log(args);
+                    const usuarios = await UserModel.find({ _id: context.userData._id });
+                    return usuarios;
+                }else if(context.userData.rol === 'ADMINISTRADOR'){
+                    const usuarios = await UserModel.find({ ...args.filtro });
+                    return usuarios;
+                }else if(context.userData.rol === 'LIDER'){
+                    const usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });
+                    return usuarios;
+                }
+            }else{
+                return null;
+            }
         },
         Usuario: async (parent, args) => {
             const usuario = await UserModel.findOne({ _id: args._id });
