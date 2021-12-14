@@ -19,6 +19,13 @@ const resolversProyecto = {
     },
     Query: {
         Proyectos: async (parent, args, context) => {
+            if (context.userData) {
+                if (context.userData.rol === 'LIDER') {
+                    const proyectos = await ProjectModel.find({ lider: context.userData._id });
+                    console.log('es lider de', proyectos);
+                    return proyectos;
+                }
+            }
             const proyectos = await ProjectModel.find();
             return proyectos;
         },
@@ -45,6 +52,41 @@ const resolversProyecto = {
             );
             return proyectoEditado;
         },
+
+        //H07 Y H08 y H09
+        editarProyectoAdmin: async (parent, args, context) => {
+            if(context.userData){
+                if(context.userData.rol === 'ADMINISTRADOR'){
+                    const proyectoEditadoAdmin = await ProjectModel.findByIdAndUpdate( 
+                    args._id,
+                    { ...args.campos },
+                    { new: true }
+                    )
+                    return proyectoEditadoAdmin;
+                }
+            }else{
+                return null;
+            }
+        },
+        editarProyectoLider: async (parent, args, context) => {
+            if(context.userData){
+                if(context.userData.rol === 'LIDER'){
+                    const proyectoEditadoLider = await ProjectModel.findByIdAndUpdate( 
+                    args._id,
+                    { 
+                        nombre: args.nombre,
+                        objetivos: args.objetivos,
+                        presupuesto: args.presupuesto,
+                    },
+                    { new: true }
+                    )
+                    return proyectoEditadoLider;
+                }else{
+                    return null;
+                }
+            }
+        },
+        
         crearObjetivo: async (parent, args) => {
             const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
                 args.idProyecto,
