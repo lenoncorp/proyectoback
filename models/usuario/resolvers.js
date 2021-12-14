@@ -43,7 +43,9 @@ const resolversUsuario = {
         Usuarios: async (parent, args, context) => {
             if(context.userData){
                 if(context.userData.rol === 'ADMINISTRADOR'){
+                    console.log('soy Admin y entre aqui');
                     const usuarios = await UserModel.find({ ...args.filtro });
+                    console.log('usuarios', usuarios);
                     return usuarios;
                 }else if(context.userData.rol === 'LIDER'){
                     const usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });

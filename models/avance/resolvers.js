@@ -2,6 +2,7 @@
 import { ModeloAvance } from "./avance.js";
 
 const resolversAvance = {
+    
     Query: {
         Avances: async (parent, args) => {
             const avances = await ModeloAvance.find()
