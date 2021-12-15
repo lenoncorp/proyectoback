@@ -86,7 +86,7 @@ const resolversProyecto = {
                 }
             }
         },
-        
+
         crearObjetivo: async (parent, args) => {
             const proyectoConObjetivo = await ProjectModel.findByIdAndUpdate(
                 args.idProyecto,
