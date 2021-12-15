@@ -21,8 +21,10 @@ const tiposAvance = gql`
         proyecto: String!,
         creadoPor: String!
         ): Avance
-    }
+        agregarObservacion(_id: String!, observacion:String!): Avance
 
+    }
+    
 `;
 
 export { tiposAvance };

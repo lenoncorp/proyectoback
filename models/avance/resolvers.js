@@ -35,6 +35,14 @@ const resolversAvance = {
             });
             return avanceCreado;
         },
+        agregarObservacion: async (parents, args)=>{
+            console.log('hola')
+            console.log(args._id)
+            console.log(args.observacion)
+            const avanceEditado = await ModeloAvance.findOneAndUpdate({_id: args._id}, {$push: {observaciones:args.observacion}})
+               
+            return avanceEditado;
+        }
     },
 
 };
