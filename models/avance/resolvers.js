@@ -1,6 +1,7 @@
 
 import { ModeloAvance } from "./avance.js";
 import { ProjectModel } from "../proyecto/proyecto.js";
+import { InscriptionModel } from "../inscripcion/inscripcion.js";
 
 const resolversAvance = {
 
@@ -14,6 +15,19 @@ const resolversAvance = {
                         .populate('creadoPor');
                     return avances;
                 }
+            else if(context.userData.rol === 'ESTUDIANTE'){
+                    const inscripciones = await InscriptionModel.find({estudiante: context.userData._id});
+                    const proyectos = inscripciones.map((inscripcion)=>{return inscripcion.proyecto})
+                    console.log("-----------")
+                    console.log(inscripciones)
+                    console.log("-----------")
+                    console.log(proyectos)
+                    //  const proyectos = await ProjectModel.find({lider: context.userData._id})
+                    const avances = await ModeloAvance.find({proyecto: proyectos})
+                        .populate('proyecto')
+                        .populate('creadoPor');
+                    return avances;
+            }
             }return null;
         },
         filtrarAvance: async (parents, args) => {
