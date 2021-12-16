@@ -1,50 +1,72 @@
+import { ProjectModel } from '../proyecto/proyecto.js';
+import { UserModel } from '../usuario/usuario.js';
 import { InscriptionModel } from './inscripcion.js';
 
 const resolverInscripciones = {
+    Inscripcion: {
+        proyecto: async (parent, args, context) => {
+            return await ProjectModel.findOne({ _id: parent.proyecto });
+        },
+        estudiante: async (parent, args, context) => {
+            return await UserModel.findOne({ _id: parent.estudiante });
+        },
+    },
 
     Query: {
-        Inscripciones: async (parent, args) => {
-            const inscripciones = await InscriptionModel.find();
-            return inscripciones;
-        },
-        //H015
-        InscripcionesLider: async (parent,args,context) => {
-            if(context.userData){
+        Inscripciones: async (parent, args, context) => {
+            let filtro = {};
+            if (context.userData) {
                 if (context.userData.rol === 'LIDER') {
-                        const inscripcionesLider = await InscriptionModel.find({ lider: context.userData._id})
-                    return inscripcionesLider;
+                    const projects = await ProjectModel.find({ lider: context.userData._id });
+                    const projectList = projects.map((p) => p._id.toString());
+                    filtro = {
+                        proyecto: {
+                            $in: projectList,
+                        },
+                    };
                 }
-            }else{
-                return null;
             }
-        }
+            const inscripciones = await InscriptionModel.find({ ...filtro });
+            return inscripciones;
+     
+        // inscripcionesNoAprobadas: async () => {
+    //   const ina = await InscriptionModel.find({ estado: 'PENDIENTE' }).populate('estudiante');
+    // },
+
     },
 
     Mutation: {
-        //H020
-        crearInscripcion: async (parent, args, context) => {
-            if(context.userData){
-                if (context.userData.rol === 'ESTUDIANTE') {
-                    const inscripcionCreada = await InscriptionModel.create({
-                        estado: args.estado,
-                        proyecto: args.proyecto,
-                        estudiante: context.userData._id,
-                    })
-                    return inscripcionCreada;
-                }
-            }else{
-                return null;
-            }
+
+        crearInscripcion: async (parent, args) => {
+            const inscripcionCreada = await InscriptionModel.create({
+                proyecto: args.proyecto,
+                estudiante: args.estudiante,
+            });
+            return inscripcionCreada;
+
         },
         aprobarInscripcion: async (parent, args) => {
             const inscripcionAprobada = await InscriptionModel.findByIdAndUpdate(args.id, {
                 estado: 'ACEPTADO',
                 fechaIngreso: Date.now(),
             },
-            {new:true}
+                { new: true }
             );
             return inscripcionAprobada;
         },
+
+
+        rechazarInscripcion: async (parent, args) => {
+            const inscripcionRechazada = await InscriptionModel.findByIdAndUpdate(args.id, {
+                estado: 'RECHAZADO',
+                fechaEgreso: Date.now(),
+            },
+                { new: true }
+            );
+            return inscripcionRechazada;
+        },
+    },
+v
 
         //H016
         aprobarInscripcionLider: async (parent, args, context) => {

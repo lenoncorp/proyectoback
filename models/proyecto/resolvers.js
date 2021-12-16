@@ -10,6 +10,12 @@ const resolversProyecto = {
             });
             return usr;
         },
+        inscripciones: async (parent, args, context) => {
+            const inscripciones = await InscriptionModel.find({
+                proyecto: parent._id,
+            });
+            return inscripciones;
+        },
     },
     // Query: {
     //     Proyectos: async (parent, args, context) => {
@@ -35,39 +41,18 @@ const resolversProyecto = {
     Query:{
         //H013
         Proyectos: async (parent, args, context) => {
-            if(context.userData){
+
+            if (context.userData) {
                 if (context.userData.rol === 'LIDER') {
-                    console.log("mensaje de entrada");
-                    console.log(context.userData);
-                    
-                    const proyectos = await ProjectModel.find({ lider: context.userData._id})
-                        .populate("inscripciones")
-                        //H017
-                        .populate("avances")
-                        
-                        // {
-                        //     path: 'inscripciones',
-                        //     populate: {
-                        //     path: 'avances',
-                        //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
-                        //     },
-                        // }
+                    const proyectos = await ProjectModel.find({ lider: context.userData._id });
+                    console.log('es lider de', proyectos);
                     return proyectos;
-                }
-                //H006
-                else if(context.userData.rol === 'ADMINISTRADOR'){
-                    const proyectos = await ProjectModel.find();
-                    return proyectos;
-                }
-                //H019       
-                else if (context.userData.rol === 'ESTUDIANTE'){
-                    const proyectos = await ProjectModel.find();
-                    return proyectos;
-                }else{
-                    return null;
                 }
             }
-        } 
+            const proyectos = await ProjectModel.find();
+            return proyectos;
+        },
+
     },
 
 
@@ -102,6 +87,9 @@ const resolversProyecto = {
             );
             return proyectoEditado;
         },
+
+
+
         //H07 Y H08 y H09
         editarProyectoAdmin: async (parent, args, context) => {
             if(context.userData){
