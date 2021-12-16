@@ -17,8 +17,31 @@ const resolversProyecto = {
             return inscripciones;
         },
     },
-    Query: {
+    // Query: {
+    //     Proyectos: async (parent, args, context) => {
+    //         const proyectos = await ProjectModel.find();
+    //         return proyectos;
+    //     },
+    // },
+
+    //QUERY H013 sin restricciones
+    // Query: {
+    //     Proyectos: async (parent, args, context) => {
+    //         console.log(args);
+    //         const proyectos = await ProjectModel.find({ ...args.filtroP });
+    //         return proyectos;
+    //     },
+    //     ProyectoLider: async (parent, args) => {
+    //         const proyectoLider = await ProjectModel.findOne({ _id: args._id });
+    //         return proyectoLider;
+    //     },
+    // },
+    
+   
+    Query:{
+        //H013
         Proyectos: async (parent, args, context) => {
+
             if (context.userData) {
                 if (context.userData.rol === 'LIDER') {
                     const proyectos = await ProjectModel.find({ lider: context.userData._id });
@@ -29,21 +52,33 @@ const resolversProyecto = {
             const proyectos = await ProjectModel.find();
             return proyectos;
         },
+
     },
+
+
+
     Mutation: {
+        //H012
         crearProyecto: async (parent, args, context) => {
-            const proyectoCreado = await ProjectModel.create({
-                nombre: args.nombre,
-                estado: args.estado,
-                fase: args.fase,
-                fechaInicio: args.fechaInicio,
-                fechaFin: args.fechaFin,
-                presupuesto: args.presupuesto,
-                lider: args.lider,
-                objetivos: args.objetivos,
-            });
-            return proyectoCreado;
+            if(context.userData){
+                if(context.userData.rol === 'LIDER'){
+                    const proyectoCreado = await ProjectModel.create({
+                        nombre: args.nombre,
+                        estado: args.estado,
+                        fase: args.fase,
+                        fechaInicio: args.fechaInicio,
+                        fechaFin: args.fechaFin,
+                        presupuesto: args.presupuesto,
+                        lider: args.lider,
+                        objetivos: args.objetivos,
+                    })
+                    return proyectoCreado;
+                }
+            }else{
+                return null;
+            }
         },
+
         editarProyecto: async (parent, args) => {
             const proyectoEditado = await ProjectModel.findByIdAndUpdate(
                 args._id,
@@ -52,6 +87,8 @@ const resolversProyecto = {
             );
             return proyectoEditado;
         },
+
+
 
         //H07 Y H08 y H09
         editarProyectoAdmin: async (parent, args, context) => {

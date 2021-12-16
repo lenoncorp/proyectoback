@@ -28,18 +28,22 @@ const resolverInscripciones = {
             }
             const inscripciones = await InscriptionModel.find({ ...filtro });
             return inscripciones;
-        },
+     
         // inscripcionesNoAprobadas: async () => {
     //   const ina = await InscriptionModel.find({ estado: 'PENDIENTE' }).populate('estudiante');
     // },
+
     },
+
     Mutation: {
+
         crearInscripcion: async (parent, args) => {
             const inscripcionCreada = await InscriptionModel.create({
                 proyecto: args.proyecto,
                 estudiante: args.estudiante,
             });
             return inscripcionCreada;
+
         },
         aprobarInscripcion: async (parent, args) => {
             const inscripcionAprobada = await InscriptionModel.findByIdAndUpdate(args.id, {
@@ -51,6 +55,7 @@ const resolverInscripciones = {
             return inscripcionAprobada;
         },
 
+
         rechazarInscripcion: async (parent, args) => {
             const inscripcionRechazada = await InscriptionModel.findByIdAndUpdate(args.id, {
                 estado: 'RECHAZADO',
@@ -61,7 +66,25 @@ const resolverInscripciones = {
             return inscripcionRechazada;
         },
     },
+v
 
+        //H016
+        aprobarInscripcionLider: async (parent, args, context) => {
+            if(context.userData){
+                if (context.userData.rol === 'LIDER') {
+                    const inscripcionAprobadaLider = await InscriptionModel.findByIdAndUpdate(args.id, {
+                        estado: args.estado,
+                        fechaIngreso: Date.now(),
+                    },
+                        {new:true}
+                    );
+                    return inscripcionAprobadaLider;
+                }
+            }else{
+                return null;
+            }
+        },
+    },
 };
 
 export { resolverInscripciones };

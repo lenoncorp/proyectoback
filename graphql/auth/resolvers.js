@@ -29,7 +29,9 @@ const resolversAutenticacion = {
         },
         login: async (parent, args) => {
             const usuarioEncontrado = await UserModel.findOne({ correo: args.correo });
+
             if (usuarioEncontrado) {
+
                 if (await bcrypt.compare(args.password, usuarioEncontrado.password)) {
                     return {
                         token: generateToken({
@@ -42,6 +44,7 @@ const resolversAutenticacion = {
                         }),
                     };
                 }
+
             }
         },
 

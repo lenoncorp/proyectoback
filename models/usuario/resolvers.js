@@ -4,7 +4,38 @@ import { InscriptionModel } from '../inscripcion/inscripcion.js';
 
 
 const resolversUsuario = {
+    //H10
+    Query:{
+        Usuarios: async (parent, args, context) => {
+            if(context.userData){
+                if (context.userData.rol === 'LIDER') {
+                    console.log("mensaje de entrada");
+                    console.log(context.userData);
+                    
+                    const usuarios = await UserModel.find({ rol: 'ESTUDIANTE'})
+                        // .populate([
+                        // {
+                        //     path: 'inscripciones',
+                        //     populate: {
+                        //     path: 'proyectosLiderados',
+                        //     populate: [{path: 'proyecto'},{ path: 'lider' }, { path: 'avances' }],
+                        //     },
+                        //}
+                    //])
+                    return usuarios;
+                    //H04
+                }else if(context.userData.rol === 'ADMINISTRADOR'){
+                    const usuarios = await UserModel.find();
+                    return usuarios;
+                }
+                
+            }else{
+                return null;
+            }
 
+        } 
+    },
+            
     //Query: {
     //Usuarios: async (parent, args, context) => {
     //if (context.userData.rol === 'LIDER') {
@@ -34,6 +65,7 @@ const resolversUsuario = {
     //path: 'proyectosLiderados',
     // },
     // ]);
+
     Usuario: {
         inscripciones: async (parent, args, context) => {
             return InscriptionModel.find({ estudiante: parent._id });
@@ -71,6 +103,7 @@ const resolversUsuario = {
             return usuario;
         },
     },
+
     Mutation: {
         crearUsuario: async (parent, args) => {
             const salt = await bcrypt.genSalt(10);
@@ -103,6 +136,36 @@ const resolversUsuario = {
 
             return usuarioEditado;
         },
+
+        //H05
+        editarUsuarioAdmin: async (parent, args, context) => {
+            if(context.userData){
+                if(context.userData.rol === 'ADMINISTRADOR'){
+                    const usuarioEditadoAdmin = await UserModel.findByIdAndUpdate(args._id, {
+                        estado: args.estado,
+                    },
+                    //para mostrar el usuario ya editado
+                        { new: true }
+                    );
+                    return usuarioEditadoAdmin;
+                    //H011
+                }else if(context.userData.rol === 'LIDER'){
+                    const usuarioEditadoAdmin = await UserModel.findByIdAndUpdate(args._id, {
+                        estado: args.estado,
+                    },
+                    //para mostrar el usuario ya editado
+                        { new: true }
+                    );
+                    return usuarioEditadoAdmin;
+                }
+                else{
+                    return null;
+                }
+            }
+        },
+
+
+        
         eliminarUsuario: async (parent, args) => {
             if (Object.keys(args).includes('_id')) {
                 const usuarioEliminado = await UserModel.findOneAndDelete({ _id: args._id });
