@@ -5,7 +5,7 @@ import { ProjectModel } from './models/proyecto/proyecto.js';
 import { ObjectId } from 'mongoose';
 import { ObjectiveModel } from './models/objective.js';
 
-// METODOLOGÍA ONE TO MANY #1
+// METODOLOGÍA ONE TO MANY #1    Daniel Saldarriaga
 const crearProyectoConObjetivos1 = async () => {
   const usuarioInicial = await UserModel.create({
     nombre: 'Fredy',
