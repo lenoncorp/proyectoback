@@ -23,7 +23,10 @@ const tiposUsuario = gql`
     }
 
     type Query {
-        Usuarios: [Usuario]
+
+        Usuarios(filtro: FiltroUsuarios): [Usuario]
+        UsuarioPerfil(filtro: FiltroUsuarios): [Usuario]
+
         Usuario(_id: String!): Usuario
     }
 
@@ -40,11 +43,11 @@ const tiposUsuario = gql`
         ): Usuario
 
     editarUsuario(
-        _id: String!
-        nombre: String!
-        apellido: String!
-        identificacion: String!
-        correo: String!
+        _id: String
+        nombre: String
+        apellido: String
+        identificacion: String
+        correo: String
         estado: Enum_EstadoUsuario!
     ): Usuario
 

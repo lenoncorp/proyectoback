@@ -67,6 +67,18 @@ const tiposProyecto = gql`
         ): Proyecto
 
         editarProyecto(_id: String!, campos: camposProyecto): Proyecto
+
+        editarProyectoAdmin(   
+            _id: String!,
+            campos: camposProyecto
+        ): Proyecto
+        
+        editarProyectoLider(
+            _id: String!,
+            nombre: String
+            objetivos: [String]
+            presupuesto: Float
+        ): Proyecto
         
         editarProyectoAdmin(   
             _id: String!,
@@ -82,7 +94,7 @@ const tiposProyecto = gql`
         
         crearObjetivo(idProyecto: String!, campos: camposObjetivo!): Proyecto
     
-        editarObjetivo(idProyecto: String!, indexObjetivo: Int!, campos: camposObjetivo): Proyecto
+        editarObjetivo(idProyecto: String!, indexObjetivo: Int!, campos: camposObjetivo!): Proyecto
     
         eliminarObjetivo(idProyecto: String!, idObjetivo: String!): Proyecto
     }

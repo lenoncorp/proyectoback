@@ -65,73 +65,44 @@ const resolversUsuario = {
     //path: 'proyectosLiderados',
     // },
     // ]);
-   
 
-    //query con filtro genérico
-
-    // Usuario: {
-    //     inscripciones: async (parent, args, context) => {
-    //         return InscriptionModel.find({ estudiante: parent._id });
-    //     },
-    // },
-
-    // Query: {
-    //     Usuarios: async (parent, args, context) => {
-    //         console.log(args);
-    //         const usuarios = await UserModel.find({ ...args.filtro });
-    //         return usuarios;
-    //     },
-    //     Usuario: async (parent, args) => {
-    //         const usuario = await UserModel.findOne({ _id: args._id });
-    //         return usuario;
-    //     },
-    // },
-
-    
-
-
-    //query con filtro génerico + if
-
-    // Query: {
-    //     Usuarios: async (parent, args, context) => {
-    //         if(context.userData.rol ==='LIDER'){
-    //             console.log(args);
-    //             const usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });
-    //             return usuarios;
-    //         }else{
-    //             const usuarios = await UserModel.find();
-    //             return usuarios;
-    //         }
-    //     },
-    //     Usuario: async (parent, args) => {
-    //         const usuario = await UserModel.findOne({ _id: args._id });
-    //         return usuario;
-    //     },
-    // },
-
-    //Query con if
-    // Query: {
-
-    //     Usuarios: async (parent, args, context) => {
-    //         if(context.userData.rol ==='LIDER'){
-    //             console.log(args);
-    //             const usuarios = await UserModel.find({rol: 'ESTUDIANTE' });
-    //             return usuarios;}
-    //         else{
-    //             const usuarios = await UserModel.find();
-    //             return usuarios;
-    //         }
-    //     },
-
-
-    //     //
-    //     Usuario: async (parent, args) => {
-    //         const usuario = await UserModel.findOne({ _id: args._id });
-    //         return usuario;
-    //     },
-    // },
-
-    
+    Usuario: {
+        inscripciones: async (parent, args, context) => {
+            return InscriptionModel.find({ estudiante: parent._id });
+        },
+    },
+    Query: {
+        Usuarios: async (parent, args, context) => {
+            if(context.userData){
+                if(context.userData.rol === 'ADMINISTRADOR'){
+                    console.log('soy Admin y entre aqui');
+                    const usuarios = await UserModel.find({ ...args.filtro });
+                    console.log('usuarios', usuarios);
+                    return usuarios;
+                }else if(context.userData.rol === 'LIDER'){
+                    const usuarios = await UserModel.find({ rol: 'ESTUDIANTE' });
+                    return usuarios;
+                }
+            }else{
+                return null;
+            }
+        },
+        UsuarioPerfil: async (parent, args, context) => {
+            if(context.userData){
+                    console.log('estoy aqui');
+                    const usuarios = await UserModel.find({ _id: context.userData._id });
+                    console.log('usuarios', usuarios);
+                    return usuarios;
+                }else{
+                    console.log('no es estudiante')
+                    return null;
+                };  
+        },
+        Usuario: async (parent, args) => {
+            const usuario = await UserModel.findOne({ _id: args._id });
+            return usuario;
+        },
+    },
 
     Mutation: {
         crearUsuario: async (parent, args) => {
